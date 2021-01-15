@@ -1,0 +1,92 @@
+<html>
+   <body>
+   <font face="Arial">
+      <b>Device Manager Tests</b><br/><br/>
+      <table style="font-size:12px">
+        <tr><td style="color:gray"><b>Check the App Server</b></td></tr> 
+        <tr><td><a href="/random">/random</a></td><td>Get a random number</td></tr>
+        
+        <tr><td><b>Types</b></td></tr>
+        <tr><td><a href="/list/rooms">/list/rooms</a></td><td>List all rooms</td></tr>
+        <tr><td><a href="/list/room/types">/list/room/types</a></td><td>List room types</td></tr>
+        <tr><td><a href="/list/relsen/types">/list/relsen/types</a></td><td>List relsen types</td></tr>
+        
+        <tr><td style="color:gray"><b>All devices</b></td></tr> 
+        
+        <tr><td><a href="/get/devices">/get/devices</a></td><td>List all device ids</td></tr>
+        <tr><td><a href="/get/active/devices">/get/active/devices</a></td><td>Get active device ids</td></tr>         
+        <tr><td><a href="/get/inactive/devices">/get/inactive/devices</a></td><td>Get inactive device ids</td></tr>        
+        <tr><td><a href="/dump/device/tree">/dump/device/tree</a></td><td>Dump all devices' JSON  as a tree</td></tr>
+
+        <tr><td style="color:gray"><b>Device filter</b></td></tr> 
+
+        <tr><td><a href="/get/device/config?device_id=labs1">/get/device/config?device_id=labs1</a></td><td>Get a device's donfig</td></tr>
+        <tr><td><a href="/get/device/details?device_id=labs1">/get/device/details?device_id=labs1</a></td><td>Dump all info of a device</td></tr>        
+        
+        <tr><td style="color:gray"><b>Relay & Sensor ids</b></td></tr> 
+        
+        <tr><td><a href="/get/relsens">/get/relsens</a></td><td>List all relay ids & sensors ids</td></tr>
+        <tr><td><a href="/get/relsen/tree">/get/relsen/tree</a></td><td>All relay ids & sensors ids as a tree</td></tr>
+        
+        <tr><td style="color:gray"><b>Relay & Sensor objects</b></td></tr> 
+        
+        <tr><td><a href="/dump/relsens">/dump/relsens</a></td><td>Dump full relsens as a list</td></tr>
+        <tr><td><a href="/dump/relsen/tree">/dump/relsen/tree</a></td><td>Dump fulll relsons as a tree</td></tr>
+        
+        <tr><td style="color:gray"><b>Filters </b></td></tr> 
+
+        <tr><td><a href="/get/relsen/details?device_id=labs1&relsen_id=POWER1">/get/relsen/details?device_id=labs1&relsen_id=POWER1</a></td><td>Find a relsen object by id</td></tr>
+        <tr><td><a href="/get/relsen/ids/of/room?room_name=Kids%20bath%20room">/get/relsen/ids/of/room?room_name=Kids%20bath%20room</a></td><td>Relsen ids in a room</td></tr>
+        <tr><td><a href="/get/relsens/of/room?room_name=Kids%20bath%20room">/get/relsens/of/room?room_name=Kids%20bath%20room</a></td><td>Relsen objects in a room</td></tr>
+        <tr><td><a href="/get/relsen/ids/of/room/type?room_type=Bed%20room">/get/relsen/ids/of/room/type?room_type=Bed%20room</a></td><td>Relsen ids by room type</td></tr>
+        <tr><td><a href="/get/relsens/of/room/type?room_type=Bed%20room">/get/relsens/of/room/type?room_type=Bed%20room</a></td><td>Relsen objects by room type</td></tr>
+        <tr><td><a href="/get/relsen/ids/of/type?relsen_type=Tube%20light">/get/relsen/ids/of/type?relsen_type=Tube%20light</a></td><td>Relsen ids by relsen type</td></tr>
+        <tr><td><a href="/get/relsens/of/type?relsen_type=Tube%20light">/get/relsens/of/type?relsen_type=Tube%20light</a></td><td>Relsen objects by relsen type</td></tr>
+        <tr><td><a href="/get/relsen/ids/of/group?group_name=First%20floor">/get/relsen/ids/of/group?group_name=First%20floor</a></td><td>Relsen ids by group type</td></tr>
+        <tr><td><a href="/get/relsens/of/group?group_name=First%20floor">/get/relsens/of/group?group_name=First%20floor</a></td><td>Relsen objects by group type</td></tr>
+
+        <tr><td style="color:gray"><b>Database Admin (Caution!) </b></td></tr>
+        
+        <tr><td><a href="/create/db">/create/db</a></td><td>Create the database</td></tr>
+        <tr><td><a href="/add/test/data">/add/test/data</a></td><td>Add test devices</td></tr> 
+        <tr><td><a href="/remove/device?device_id=labs1">/remove/device?device_id=labs1</a></td><td>Remove one device</td></tr>
+        <tr><td><a href="/remove/all/devices">/remove/all/devices</a></td><td>Remove all devices</td></tr>
+        <tr><td><a href="/remove/all/relsens">/remove/all/relsens</a></td><td>Remove all relays & sensors</td></tr>
+        <tr><td><a href="/delete/db">/delete/db</a></td><td>Delete the database</td></tr>       
+        </table>        
+        <hr/>
+<p style="font-size:11px">
+There are only 3 API calls using HTTP POST : <br/>
+(All paths shown below are relative paths) <br/><br/>
+
+1) To onboard a new device: <br/><br/>
+Make a POST request to <b>/onboard/device</b> <br/>
+Paylaod: <br/>
+{<br/>
+  "device_id" : "ABC1234",  <br/>
+  "relesn_list" : ["POWER1", "POWER2", "SENSOR"] <br/>
+}<br/><br/>
+2) To enable/disable a device: <br/><br/>
+Make a POST request to  <b>/update/device</b>  <br/>
+Payload: <br/>
+{ <br/>
+  "device_id" : "ABC1234",  <br/>
+  "enabled" : true  <br/>
+} <br/>
+ <br/>
+3) To update a relsen object: <br/><br/>
+Make a POST request to  <b>/update/relsen</b>  <br/>
+Payload: <br/>
+{ <br/>
+  "device_id" : "ABC1234",  <br/>
+  "relsen_id" : "POWER3",  <br/>
+  "relsen_name" : "Bed room fan", <br/> 
+  "relsen_type" : "Fan",  <br/>
+  "room_name" : "Mother\'s bed room", <br/> 
+  "room_type" : "Bed room",  <br/>
+  "group_name" : "Ground floor", <br/>
+  "schedule" : [[11.45,12.0], [13.0,14.30]]}"  <br/>
+}  <br/>
+</p>
+   </body>
+</html>

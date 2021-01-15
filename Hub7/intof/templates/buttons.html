@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Tasmota Controller</title>
+    <style>
+    .button {
+      background-color: #4CAF50; /* Green */
+      border: none;
+      outline: 0;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 12px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 18px;
+    }
+.button1 {width: 120px; height: 120px;background-color:gray; color: black;}  
+</style>
+</head>
+<body> 
+    <font face="Arial">
+    <h3>Bed Room</h3>
+    <hr/>
+    <button id="POWER1" class="button button1" onclick="send_cmd(device1, 'POWER1', 'toggle')"> ON </button>  
+    <button id="POWER2" class="button button1" onclick="send_cmd(device1, 'POWER2', 'toggle')"> ON </button>  
+    <button id="POWER3" class="button button1" onclick="send_cmd(device1, 'POWER3', 'toggle')"> ON </button>  
+    <button id="POWER4" class="button button1" onclick="send_cmd(device1, 'POWER4', 'toggle')"> ON </button>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    <script type="text/javascript">
+    
+     var device1 = 'labs1';           
+          
+     //var server = 'http://127.0.0.1:5000/';
+     //var server = 'http://192.168.0.100:5000/';
+     
+     var server = 'http://' +document.domain +':' +location.port;
+     
+     var socket = io.connect(server);
+    
+     socket.on('connect', function()
+     {
+        console.log('Connected to socket server: ' +server);
+        //var jcmd = {"device_id" : device1, "relsen_id": "POWER1", "action" : ""} // priming read
+     	//socket.emit('client-event', JSON.stringify (jcmd));
+     });
+
+     socket.on('message', function(msg)
+     {  
+        console.log ('<-[INFO]' +JSON.stringify (msg));
+     });
+     
+     socket.on('ACK', function(msg)
+     {  
+        console.log('<-[ACK] ' +JSON.stringify (msg));
+     });
+     
+     socket.on('server-event', function(msg)
+     {  
+        //document.getElementById ("status").innerHTML = JSON.stringify (msg);
+        console.log('<=[RESP]' +JSON.stringify (msg));
+        if (msg.device_id != device1)
+            return;
+        button = msg.relsen_id;
+        var bgcolor = 'red';
+        var fgcolor = 'white';
+        var txt = 'offline';
+        if (msg.status=='ON') {
+            bgcolor =  '#4CAF50'; /* Green */
+            fgcolor = 'white';
+            txt = 'OFF';
+        }
+        else if (msg.status=='OFF') {
+            bgcolor =  'gray';  
+            fgcolor = 'black';
+            txt = 'ON';
+        }
+        document.getElementById (button).style.backgroundColor = bgcolor;
+        document.getElementById (button).style.color = fgcolor;
+        document.getElementById (button).innerHTML = txt;
+     });
+     
+     function send_cmd (deviceid, relsenid, cmd) {
+        var jcmd = {"device_id" : deviceid, "relsen_id": relsenid, "action" : cmd}
+        console.log('->[CMD] ' +JSON.stringify (jcmd));
+        socket.emit('client-event', JSON.stringify (jcmd));
+     }
+ </script>
+</body>
+</html>
