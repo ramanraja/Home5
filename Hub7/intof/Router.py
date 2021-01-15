@@ -469,8 +469,9 @@ def dump_all_relsen_tree():
     for rs in rels: 
         devid = rs.device_id
         if (devid not in retval):
-            retval[devid] = rs.toJSON()          
-    return (retval)      
+            retval[devid] = []
+        retval[devid].append (rs.toJSON())
+    return (retval)   
         
 # active - complete relsen objects as a list
 @app.route('/dump/active/relsens', methods =['GET']) 
