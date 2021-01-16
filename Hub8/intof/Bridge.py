@@ -22,9 +22,15 @@ PUB_PREFIX = app.config['PUB_PREFIX']               #'cmnd'
 PUB_SUFFIX = app.config['PUB_SUFFIX']               #'POWER'
 BROADCAST_RELSEN = app.config['BROADCAST_RELSEN']   #'POWER0'     
 BROADCAST_DEVICE = app.config['BROADCAST_DEVICE']   #'tasmotas'  # this is case sensitive **
+SENSOR_STATUS = app.config['SENSOR_STATUS']         # 'STATUS10'
+SENSOR_SUFFIX = app.config['SENSOR_SUFFIX']         # 'status' 
+SENSOR_PAYLOAD = app.config['SENSOR_PAYLOAD']       # '10'     
+SENSOR_RELSEN = app.config['SENSOR_RELSEN']         # 'SENSOR'    
+SENSOR_INTERVAL = app.config['SENSOR_INTERVAL']     # 10  (5 minutes=10x30 sec ticks)
 
 # socket
 client_count = 0         
+sensor_count = 0           
 CLIENT_EVENT = app.config['CLIENT_EVENT']           #'client-event'    
 SERVER_EVENT = app.config['SERVER_EVENT']           #'server-event'    
 ACK_EVENT = app.config['ACK_EVENT']                 #'ACK'  
@@ -50,7 +56,6 @@ simul_status = None
 is_online = None
 new_devices = None
 
-
 #--------------------------------------------------------------------------------------------
 # helpers
 #--------------------------------------------------------------------------------------------
@@ -75,7 +80,7 @@ def bgtask():
         socketio.sleep (PING_INTERVAL) # stop/daemon will be mostly called during this sleep
         if TERMINATE : 
             break
-        dprint ('\nWaking !...')
+        #dprint ('\nWaking !...')
         for devid in is_online:
             if (not is_online[devid]['online']):  # TODO: Make 3 attempts before declaring it offline
                 is_online[devid]['count'] = (is_online[devid]['count']+1) % MAX_RETRIES
@@ -151,11 +156,14 @@ def extract_status (message):
     if (rsid==LWT):
         process_lwt (devid, message.payload.decode())
         return None  # do not process it further
+    if (sp[2]==SENSOR_STATUS):   # STATUS10 -> sensor readings
+        save_sensor_reading (devid, message.payload.decode())
+        return None
     if (not sp[2].startswith('POWER')):      # TODO: handle other messages also
         return None
     sta = message.payload.decode()           # payload is the relay status: ON/OFF
     jstatus = {"device_id" : devid, "relsen_id" : rsid, "status" : sta}
-    print ('JSTATUS:', jstatus)
+    #dprint ('JSTATUS:', jstatus)
     if not devid in in_mem_devices:          # unregistered/ disabled device found; cache them in a separate structure
         if not devid in new_devices:         # we are hearing from this device for the first time
             new_devices[devid] = []          # create the key
@@ -175,10 +183,17 @@ def process_lwt (devid, message):
     print ('* {} is {} !'.format(devid, onoff_line))
     if (onoff_line == OFFLINE):              # TODO: handle ONLINE case also?
         mark_offline (devid)
-        send_offline_notification (devid)
+        send_offline_notification (devid)        
         
 #---------- send MQTT messages
-        
+
+# ask for the sensor reading from a device        
+def request_sensor (device_id):  
+    dprint('\nTriggering sensor reading..')      
+    topic = '{}/{}/{}'.format (PUB_PREFIX, device_id, SENSOR_SUFFIX) #  cmnd/device_id/status 
+    dprint (topic, SENSOR_PAYLOAD) # '10'
+    mqtt.publish (topic, SENSOR_PAYLOAD)     
+             
 # ping the first relsen of a particular device (enabled or not):
 # the result will be a single response from that device.
 def ping_device (device_id):
@@ -212,18 +227,21 @@ def ping_mqtt():
     topic = '{}/{}/{}'.format (PUB_PREFIX, BROADCAST_DEVICE, PUB_SUFFIX) # POWER
     #dprint (topic, ' (blank)')
     mqtt.publish (topic, EMPTY_PAYLOAD)    
-               
-               
+                   
 # send a probe to trace the status of ALL relays in ALL devices that are online; 
 # (they may be in the database or not, enabled or not)                       
 def send_tracer_broadcast():  
+    global sensor_count
     if SIMULATION_MODE:
         dprint ('In simulation mode: not sending tracer')
         return
     topic = '{}/{}/{}'.format (PUB_PREFIX, BROADCAST_DEVICE, BROADCAST_RELSEN) # POWER0
     dprint ('Sending probe to: ',topic)
     mqtt.publish (topic, EMPTY_PAYLOAD)  # empty payload gets the relay status
-
+    sensor_count = (sensor_count+1) % SENSOR_INTERVAL   
+    if (sensor_count==0):
+        request_sensor(BROADCAST_DEVICE)
+    
 #---------- send socket io messages
 
 def send_offline_notification (devid):
@@ -311,6 +329,15 @@ def build_initial_status():
     except Exception as e:
         print ('* EXCEPTION 2: ',str(e))
     return False
+    
+def save_sensor_reading (device_id, str_msg):  # TODO: save it in in-memory status
+    #try:
+    print ('sensor reading: ', device_id, str_msg)
+    jsensor = json.loads(str_msg)
+    jstatus = {'device_id' : device_id, 'relsen_id' : SENSOR_RELSEN, 'status' : jsensor['StatusSNS']}
+    socketio.emit (SERVER_EVENT, jstatus)
+    #except Exception as e:
+    #    print ('EXCEPTION: ', str(e))
     
 #--------------------------------------------------------------------------------------------
 # MQTT
@@ -531,6 +558,19 @@ def get_online_status():
         return {'error' : 'online status is not available; please try again'}
     return is_online 
     
+#---------- get sensor readings ---------------------------------------
+
+# initiate sensor reading 
+@app.route('/trigger/sensor', methods=['GET'])
+def trigger_sensor_reading():
+    devid = request.args.get('device_id')
+    if (not devid):
+        return ({'error' : 'device_id is required'})
+    if SIMULATION_MODE:
+        return ({'result' : 'in simulation mode'})
+    request_sensor (devid)
+    return ({'result' : 'triggered sensor reading'})
+        
 #---------- online status filters : device level
     
 # return the list of device ids that are online, found in the database and are enabled     

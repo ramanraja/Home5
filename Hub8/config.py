@@ -21,8 +21,13 @@ class Config (object):
     ACK_EVENT = 'ACK'
     BROADCAST_DEVICE = 'tasmotas'  # this is case sensitive *
     BROADCAST_RELSEN = 'POWER0'    # gets status of all the relays in a device 
-    PING_INTERVAL = 30  # daemon thread wake up interval
-    DPRINT_ENABLED = True  # debug printing
+    SENSOR_SUFFIX = 'status'       # to read sensors: cmnd/device_id/status with a payload of '10'
+    SENSOR_PAYLOAD = '10'  
+    SENSOR_STATUS = 'STATUS10'     # device responds on the topic stat/device_id/STATUS10
+    SENSOR_RELSEN = 'SENSOR'
+    PING_INTERVAL = 30             # daemon thread wake up interval, in seconds
+    SENSOR_INTERVAL = 10           # sensor reading interval, in units of PING_INTERVAL (10 x 30 sec= 5 minutes)
+    DPRINT_ENABLED = True          # debug printing
     
     def dump ():   # satic method
         print ('\nConfig:') 
@@ -43,4 +48,8 @@ class Config (object):
         print ('PING_INTERVAL: %s' % Config.PING_INTERVAL)    
         print ('BROADCAST_DEVICE: %s' % Config.BROADCAST_DEVICE)    
         print ('BROADCAST_RELSEN: %s' % Config.BROADCAST_RELSEN)
+        print ('SENSOR_STATUS: %s' % Config.SENSOR_STATUS)
+        print ('SENSOR_SUFFIX: %s' % Config.SENSOR_SUFFIX)
+        print ('SENSOR_RELSEN: %s' % Config.SENSOR_RELSEN)
+        print ('SENSOR_PAYLOAD: %s' % Config.SENSOR_PAYLOAD)
         print()        
