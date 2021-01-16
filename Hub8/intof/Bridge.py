@@ -152,14 +152,14 @@ def extract_status (message):
     sp = message.topic.split('/')
     #print ("Parsed: ", sp)
     devid = sp[1] 
-    rsid = sp[2]
-    if (rsid==LWT):
+    rsid  = sp[2]
+    if (rsid == LWT):
         process_lwt (devid, message.payload.decode())
         return None  # do not process it further
-    if (sp[2]==SENSOR_STATUS):   # STATUS10 -> sensor readings
+    if (rsid == SENSOR_STATUS):   # STATUS10: sensor readings
         save_sensor_reading (devid, message.payload.decode())
         return None
-    if (not sp[2].startswith('POWER')):      # TODO: handle other messages also
+    if (not rsid.startswith('POWER')):      # TODO: handle other messages also
         return None
     sta = message.payload.decode()           # payload is the relay status: ON/OFF
     jstatus = {"device_id" : devid, "relsen_id" : rsid, "status" : sta}
