@@ -1,0 +1,103 @@
+<html>
+   <body>
+   <font face="Arial">
+      <b>Device Manager API</b><br/><br/>
+      <table style="font-size:12px">
+        <tr><td style="color:green"><b>Check the App Server</b></td></tr> 
+        <tr><td><a href="/random">/random</a></td><td>Get a random number</td></tr>
+        
+        <tr><td style="color:green"><b>Types</b></td></tr> 
+        <tr><td><a href="/list/rooms">/list/rooms</a></td><td>List all rooms</td></tr>
+        <tr><td><a href="/list/room/types">/list/room/types</a></td><td>List room types</td></tr>
+        <tr><td><a href="/list/relsen/types">/list/relsen/types</a></td><td>List relsen types</td></tr>
+        
+        <tr><td style="color:green"><b>All Devices</b></td></tr> 
+        <tr><td><a href="/get/devices">/get/devices</a></td><td>List all device ids</td></tr>
+        <tr><td><a href="/get/active/devices">/get/active/devices</a></td><td>Get active (enabled) device ids</td></tr>         
+        <tr><td><a href="/get/inactive/devices">/get/inactive/devices</a></td><td>Get inactive (disabled) device ids</td></tr>        
+        <tr><td><a href="/dump/device/tree">/dump/device/tree</a></td><td>Dump all devices' Config and relsen objects</td></tr>
+
+        <tr><td style="color:green"><b>Relays & Sensors</b></td></tr> 
+        <tr><td><a href="/get/relsen/tree">/get/relsen/tree</a></td><td>Get all relsen ids as a tree</td></tr>
+        <tr><td><a href="/get/friendly/relsen/tree">/get/friendly/relsen/tree</a></td><td>Get user-friendly names of  relson objects as a tree</td></tr>
+        <tr><td><a href="/dump/relsen/tree">/dump/relsen/tree</a></td><td>Dump all  relson objects as a tree</td></tr>
+        
+        <tr><td style="color:green"><b>Device Filters </b></td></tr> 
+        <tr><td><a href="/get/friendly/identifier?device_id=labs1&relsen_id=POWER1">/get/friendly/identifier?device_id=labs1&relsen_id=POWER1</a></td><td>Get the user-friendly identifiers of a relsen</td></tr>
+        <tr><td><a href="/get/device/details?device_id=labs1">/get/device/details?device_id=labs1</a></td><td>Dump Config and relsen objects of a device</td></tr>        
+        <tr><td><a href="/get/relsen/details?device_id=labs1&relsen_id=POWER1">/get/relsen/details?device_id=labs1&relsen_id=POWER1</a></td><td>Find a relsen object by id</td></tr>
+        <tr><td><a href="/get/relsen/ids/of/room?room_name=Kids%20bath%20room">/get/relsen/ids/of/room?room_name=Kids%20bath%20room</a></td><td>Relsen ids in a room</td></tr>
+        <tr><td><a href="/get/relsens/of/room?room_name=Kids%20bath%20room">/get/relsens/of/room?room_name=Kids%20bath%20room</a></td><td>Relsen objects in a room</td></tr>
+        <tr><td><a href="/get/relsen/ids/of/room/type?room_type=Bed%20room">/get/relsen/ids/of/room/type?room_type=Bed%20room</a></td><td>Relsen ids by room type</td></tr>
+        <tr><td><a href="/get/relsens/of/room/type?room_type=Bed%20room">/get/relsens/of/room/type?room_type=Bed%20room</a></td><td>Relsen objects by room type</td></tr>
+        <tr><td><a href="/get/relsen/ids/of/type?relsen_type=Tube%20light">/get/relsen/ids/of/type?relsen_type=Tube%20light</a></td><td>Relsen ids by relsen type</td></tr>
+        <tr><td><a href="/get/relsens/of/type?relsen_type=Tube%20light">/get/relsens/of/type?relsen_type=Tube%20light</a></td><td>Relsen objects by relsen type</td></tr>
+        <tr><td><a href="/get/relsen/ids/of/group?group_name=First%20floor">/get/relsen/ids/of/group?group_name=First%20floor</a></td><td>Relsen ids by group name</td></tr>
+        <tr><td><a href="/get/relsens/of/group?group_name=First%20floor">/get/relsens/of/group?group_name=First%20floor</a></td><td>Relsen objects by group name</td></tr>
+
+        <tr><td style="color:green"><b>Device Inventory</b></td></tr> 
+        <tr><td><a href="/build/device/inventory">/build/device/inventory</a></td><td>Rebuild in-memory device cache</td></tr>
+        <tr><td><a href="/discover/devices">/discover/devices</a></td><td>Discover live, but unregistered devices</td></tr>
+        <tr><td><a href="/get/new/devices">/get/new/devices</a></td><td>Get the newly onboarded devices waiting to be configured</td></tr>
+       
+        <tr><td style="color:green"><b>Onboarding and Updates (simulated)</b></td></tr> 
+        <tr><td><a href="/simul/onboard/device">/simul/onboard/device</a></td><td>Simulate onboarding a new device</td></tr>     
+        <tr><td><a href="/simul/update/device">/simul/update/device</a></td><td>Simulate updating a device</td></tr>
+        <tr><td><a href="/simul/update/relsen">/simul/update/relsen</a></td><td>Simulate updating a relsen</td></tr>  
+        
+        <tr><td style="color:green"><b>Device Status</b></td></tr>
+        <tr><td><a href="/get/status?device_id=labs1">/get/status?device_id=labs1</a></td><td>Current status of a device</td></tr>
+        <tr><td><a href="/get/all/status">/get/all/status</a></td><td>Current status of all devices</td></tr>
+
+        <tr><td><a href="/get/online/relsens">/get/online/relsens</a></td><td>Get the relsen tree of registered online devices</td></tr>
+        <tr><td><a href="/get/offline/relsens">/get/offline/relsens</a></td><td>Get the relsen tree of registered offline devices</td></tr>
+        <tr><td><a href="/get/on/relsens">/get/on/relsens</a></td><td>Get the relsens that are ON</td></tr>
+        <tr><td><a href="/get/off/relsens">/get/off/relsens</a></td><td>Get the relsens that are OFF</td></tr>
+
+        <tr><td style="color:green"><b>Push Notification</b></td></tr> 
+        <tr><td><a href="/buttons">/buttons</a></td><td>Example Javascript client for SocketIO communication</td></tr>
+
+        <tr><td style="color:green"><b>Database Admin (Caution!) </b></td></tr>
+        <tr><td><a href="/create/db">/create/db</a></td><td>Drop and recreate the database</td></tr>
+        <tr><td><a href="/add/test/data">/add/test/data</a></td><td>Add test devices</td></tr> 
+        <tr><td><a href="/remove/device?device_id=labs1">/remove/device?device_id=labs1</a></td><td>Remove one device</td></tr>
+        <tr><td><a href="/remove/all/devices">/remove/all/devices</a></td><td>Remove all devices</td></tr>
+        <tr><td><a href="/delete/db">/delete/db</a></td><td>Delete the database</td></tr>       
+        </table>        
+        <hr/>
+<p style="font-size:11px">
+There are only 3 API calls using HTTP POST : <br/>
+(All paths shown below are relative paths) <br/><br/>
+
+1) To onboard a new device: <br/><br/>
+Make a POST request to <b>/onboard/device</b> <br/>
+Paylaod: <br/>
+{<br/>
+  "device_id" : "ABC1234",  <br/>
+  "relesn_list" : ["POWER1", "POWER2", "SENSOR"] <br/>
+}<br/><br/>
+2) To enable/disable a device: <br/><br/>
+Make a POST request to  <b>/update/device</b>  <br/>
+Payload: <br/>
+{ <br/>
+  "device_id" : "ABC1234",  <br/>
+  "enabled" : true  <br/>
+} <br/>
+ <br/>
+3) To update a relsen object: <br/><br/>
+Make a POST request to  <b>/update/relsen</b>  <br/>
+Payload: <br/>
+{ <br/>
+  "device_id" : "ABC1234",  <br/>
+  "relsen_id" : "POWER3",  <br/>
+  "relsen_name" : "Bed room fan", <br/> 
+  "relsen_type" : "Fan",  <br/>
+  "room_name" : "Mother\'s bed room", <br/> 
+  "room_type" : "Bed room",  <br/>
+  "group_name" : "Ground floor", <br/>
+  "schedule" : [[11.45,12.00], [13.00,14.30]],   <br/>
+  "repeat" : false <br/>
+}  <br/>
+</p>
+   </body>
+</html>
