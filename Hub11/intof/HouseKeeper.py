@@ -9,7 +9,7 @@ import json
 #from intof.Models import Device, Relsen 
 
 from intof.Models import User
-#from intof.Decorator import token_required
+from intof.Decorator import token_required
 from intof.Authenticator import insert_user
 
 import intof.Router as r
@@ -31,11 +31,8 @@ def dprint (*args):
 #----------------------------------------------------------------------------------------
 # Housekeeping routes
 #----------------------------------------------------------------------------------------
-
-@app.route('/') 
-def home():
-    return (render_template('login.html'))
          
+@app.route('/') 
 @app.route ('/index')         
 @app.route ('/menu')
 def menu ():
@@ -47,15 +44,31 @@ def test ():
     #b.bridge_test_method()
     return (render_template('tester.html'))
     
-# buttons to control a real device            
-@app.route('/buttons')
-def rooot():
-    return render_template ('buttons.html') 
-   
 @app.route('/random', methods =['GET']) 
 def random (): 
     return ({'random' : randint(0, 10000)})
-            
+
+@app.route('/secure/random', methods =['GET']) 
+@token_required
+def secure_random (current_user): 
+    return ({'secure_random' : randint(0, 10000)})
+                
+@app.route ('/secure')
+@token_required
+def secure_page (current_user):
+    msg = 'Authenticated user: {}'.format(current_user)
+    print (msg)
+    return ({'result' : 'authenticated.', 'current_user' : str(current_user)}, 200)
+    
+@app.route ('/insecure')
+def insecure_page ():
+    return ({'result' : 'this is an open page'}, 200)
+        
+# buttons to control a real device            
+@app.route('/buttons')
+def rooot():
+    return render_template ('buttons.html')     
+                    
 # socket to MQTT bridge; you can send an arbitrary MQTT payload to any topic      
 # *** CAUTION: This is a remote trap door from the Internet to your local MQTT server! ***
 # Disable it in production mode

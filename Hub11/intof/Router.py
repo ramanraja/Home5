@@ -6,9 +6,7 @@ from datetime import datetime
 import json
 from intof import db
 from intof.Models import Device, Relsen, Status
-from intof.Decorator import token_required
-
-##current_user = 'Anonymous'  # TODO: place holder till auth is implemented
+##from intof.Decorator import token_required # TODO: protect some of the APIs with authentication
 
 #----------------------------------------------------------------------------------------
 # Test
@@ -20,13 +18,6 @@ def router_test_method():
 # helper methods    
 #-----------------------------------------------------------------------------------------
 
-@app.route ('/secure')
-@token_required
-def secure_page (current_user):
-    msg = 'Authenticated user: {}'.format(current_user)
-    print (msg)
-    return ({'result' : 'authenticated.', 'current_user' : str(current_user)}, 200)
-    
 def build_device_details_tree():
     print ('stub')  # TODO: implement this
     
