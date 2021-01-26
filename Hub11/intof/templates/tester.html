@@ -3,9 +3,6 @@
    <font face="Arial">
       <b>Device Manager Tests</b><br/><br/>
       <table style="font-size:12px">
-        <tr><td style="color:red"><b>Check the App Server</b></td></tr> 
-        <tr><td><a href="/random">/random</a></td><td>Get a random number</td></tr>
-        
         <tr><td><b>Types</b></td></tr>
         
         <tr><td><a href="/list/rooms">/list/rooms</a></td><td>List all rooms</td></tr>
@@ -121,8 +118,20 @@
         <tr><td><a href="/remove/device?device_id=labs1">/remove/device?device_id=labs1</a></td><td>Remove one device</td></tr>
         <tr><td><a href="/remove/all/devices">/remove/all/devices</a></td><td>Remove all devices</td></tr>
         <tr><td><a href="/remove/all/relsens">/remove/all/relsens</a></td><td>Remove all relays & sensors</td></tr>
-         <tr><td><a href="/remove/all/status">/remove/all/status</a></td><td>Remove status</td></tr>        
-       <tr><td><a href="/delete/db">/delete/db</a></td><td>Delete the database</td></tr>       
+        <tr><td><a href="/remove/all/status">/remove/all/status</a></td><td>Remove status</td></tr>        
+        <tr><td><a href="/delete/db">/delete/db</a></td><td>Delete the database</td></tr>       
+
+        <tr><td style="color:red"><b>User Management</b></td></tr> 
+        <tr><td><a href="/login/form">/login/form</a></td><td>Login page</td></tr>       
+        <tr><td><a href="/logout">/logout</a></td><td>Logout</td></tr>       
+        <tr><td><a href="/list/users">/list/users</a></td><td>List all users</td></tr>
+        <tr><td><a href="/registration/form">/registration/form</a></td><td>Register a new user</td></tr>   
+        
+        <tr><td style="color:red"><b>Authentication</b></td></tr> 
+        <tr><td><a href="/secure">/secure</a></td><td>Secure call; requires authentication</td></tr>
+        <tr><td><a href="/insecure">/insecure</a></td><td>Open URL; authentication is not required</td></tr>
+        <tr><td><a href="/secure/random">/secure/random</a></td><td>Get a random number only if you are authenticated</td></tr>
+        <tr><td><a href="/random">/random</a></td><td></td>Get a random number even without authentication</tr>
 
         </table>         
    </body>
