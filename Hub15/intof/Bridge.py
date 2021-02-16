@@ -243,7 +243,12 @@ def update_timer (device_id, relsen_id, timer_list, repeat=True):
             return Flase
     relay_num = int(relay)          # relay number 1 to 4 within the device
     if len(timer_list) > 2:
-        print ('\n**** CAUTION: Only 2 sechedules allowed per relay; others are ignored ****\n')
+        print ('\n**** CAUTION: Only 2 sechedules allowed per relay; others are ignored ****\n') 
+        
+    if SIMULATION_MODE:
+        dprint ('In Simulation Mode: not setting timer')
+        return True
+                
     starting_timer_id = (relay_num-1)*4 + 1
     send_timer_command (device_id, relay_num, starting_timer_id, timer_list[0], repeat)  # this sets up 2 timers: one ON, and one OFf
     if len(timer_list) > 1: # process the second pair of schedule times
@@ -277,7 +282,10 @@ def clear_timers (device_id, relsen_id):
         if relay < '0' or relay > '4':  
             print ('relsen_id has to be from POWER1 to POWER4 only')
             return False
-    relay_num = int(relay)          # relay number 1 to 4 within the device
+    if SIMULATION_MODE:
+        dprint ('In Simulation Mode: not clearing timer')
+        return True            
+    relay_num = int(relay)          # relay number 1 to 4 within the device    
     starting_timer_id = (relay_num-1)*4 + 1    
     for i in range (0, MAX_TIMERS):
         relsen = 'Timer'+ str(starting_timer_id+i)
