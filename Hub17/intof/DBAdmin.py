@@ -7,15 +7,14 @@ from intof.HouseKeeper import dprint
 from intof.Models import Device,Relsen,Status,RoomType,RelsenType
 from intof.Decorator import token_required
 
-ICON_EXT = ".png"
-
 room_types = [
-    "Hall", "Bed room", "Bath room", "Store room", "Pooja room", "Living room", "Garage", "Corridor", 
-    "Portico", "Balcony"
+    "Kitchen", "Bed room", "Bath room", "Store room", "Pooja room", "Utility room", 
+    "Living room", "Security room",  "Study room"
     ]
 relsen_types = [
-    "Bulb", "Tube light", "Fan", "AC", "Heater", "Cooler", "Motor", "Pump", "Water tank", "Temperature", 
-    "CO2", "Fire alarm", "Door", "Gate"
+    "AC", "Bulb", "Camera", "Fan", "Fridge",  "Mixer", "Grinder", "Tube light", "Heater",  
+    "TV", "Motor",  "Plug", "Washing machine", 
+    "Security cam", "Temperature", "Light level", "Gas detector", "Smoke detector", "Occupancy"
     ] 
 hardware_types = [
     "NODE_MCU", "RHYDO_S4A", "RHYDO_S2A", "RHYDO_E2A", "RHYDO_E1A", "BLYNK_E2ATH", "INTOF_E2THPRL"
@@ -27,7 +26,7 @@ def add_room_type (type):
     if testtype: 
         print ('room_type already exists: {}'.format(testtype)) 
         return False
-    i = t.replace(' ', '_')+ICON_EXT
+    i = t.replace(' ', '_').lower() 
     newtype = RoomType (type=t, icon=i)
     db.session.add (newtype) 
     print ('Added room_type: {}'.format(newtype))
@@ -40,7 +39,7 @@ def add_relsen_type (type):
     if testtype: 
         print ('relsen_type already exists: {}'.format(testtype)) 
         return False
-    i = t.replace(' ', '_')+ICON_EXT
+    i = t.replace(' ', '_').lower() 
     newtype = RelsenType (type=t, icon=i)
     db.session.add (newtype) 
     print ('Added relsen_type: {}'.format(newtype))
@@ -54,7 +53,7 @@ def add_types():
         if testtype: 
             print ('room_type already exists: {}'.format(testtype)) 
         else:
-            i = t.replace(' ', '_')+ICON_EXT
+            i = t.replace(' ', '_').lower() 
             newtype = RoomType (type=t, icon=i)
             db.session.add (newtype) 
             print ('Added room_type: {}'.format(newtype))
@@ -65,7 +64,7 @@ def add_types():
         if testtype: 
             print ('relsen_type already exists: {}'.format(testtype)) 
         else:
-            i = t.replace(' ', '_')+ICON_EXT
+            i = t.replace(' ', '_').lower() 
             newtype = RelsenType (type=t, icon=i)
             db.session.add (newtype) 
             print ('Added reslen_type: {}'.format(newtype))
